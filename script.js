@@ -178,7 +178,7 @@ function tick() {
       t.container.classList.add("finished");
     });
 
-    beep.currentTime = 0; // repart au début
+    #beep.currentTime = 0; // repart au début
     beep.play();
     launchConfetti();
     timers = [];
@@ -353,4 +353,5 @@ function launchConfetti() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }, 13000); // confettis pendant 13000 secondes
 }
+
 
