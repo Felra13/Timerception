@@ -1,0 +1,293 @@
+/* --- Global container --- */
+body {
+  font-family: Arial, sans-serif;
+  background: #e0e0e0; /* gris clair */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+h1, h2 {
+  font-family: "Trebuchet MS";
+  font-weight: bold;
+  color: #333;
+}
+
+
+.container {
+  background: white;            /* fond blanc */
+  padding: 40px 50px;           /* plus d’espace intérieur */
+  border-radius: 16px;          /* coins arrondis */
+  border: 2px solid black;      /* fine bordure noire */
+  
+  /* Ombre pour effet flottant */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  
+  text-align: center;
+  width: 90%;
+  max-width: 900px;
+  
+  /* Transition légère au hover (optionnel) */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.container:hover {
+  transform: translateY(-5px);                   /* léger déplacement vers le haut */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);      /* ombre plus marquée */
+}
+
+/* --- Titres --- */
+h1 {
+  margin-bottom: 10px;
+  font-size: 36px;
+  color: #333;
+}
+h2 {
+  margin: 20px 0 10px;
+  font-size: 34px;
+  color: #333;
+}
+
+h4 {
+  margin: 20px 0 10px;
+  font-size: 70px;
+  color: #333;
+}
+/* --- Global Timer --- */
+#global-timer {
+  font-size: 48px; /* 50% plus gros qu’avant */
+  font-weight: bold;
+  margin: 10px 0 20px;
+  color: #222;
+}
+
+/* --- Current Timer --- */
+#current-timer {
+  font-size: 128px;           /* texte très gros */
+  font-weight: bold;
+  margin: 30px auto;          /* centré horizontalement avec espace vertical */
+  color: #111;
+
+  /* Cadre autour du timer */
+  border: 4px solid #2196f3;  /* bleu */
+  border-radius: 20px;         /* coins arrondis */
+  padding: 20px 40px;          /* espace intérieur */
+  display: block;              /* bloque la ligne pour que le bouton soit en dessous */
+  width: fit-content;          /* largeur adaptée au texte */
+  background-color: #ffffff;   /* fond blanc */
+}
+
+
+
+/* --- Boutons globaux --- */
+.buttons button {
+  margin: 5px;
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.buttons button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+#start { background: #4caf50; color: white; }
+#pause { background: #ff9800; color: white; }
+#reset { background: #f44336; color: white; }
+
+#add-timer {
+  background: #2196f3;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 20px;
+  margin: 20px 0;
+}
+#add-timer:hover { opacity: 0.9; }
+
+/* --- Liste des timers --- */
+#timers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.timer-item {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+/* Titre du timer (Timer 1, Timer 2, …) */
+.timer-item .title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Compte à rebours discret */
+.timer-item .countdown {
+  font-size: 16px;
+  color: #777;
+}
+
+/* Bouton supprimer */
+.timer-item button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 28px;
+  text-align: center;
+}
+.timer-item button:hover {
+  background: #d32f2f;
+}
+
+/* État : timer en cours */
+.timer-item.current {
+  border: 2px solid #2196f3;
+  background: #e3f2fd;
+}
+
+/* État : timers à venir */
+.timer-item.upcoming {
+  background: #bbdefb;
+  border: 1px solid #90caf9;
+}
+
+/* État : timers terminés */
+.timer-item.finished {
+  background: #eeeeee;
+  color: #777;
+  border: 1px solid #ccc;
+}
+
+.progress-container {
+  position: relative;
+  width: 80%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 10px;
+  margin: 10px auto 30px auto; /* espace au-dessus et en-dessous */
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4caf50, #2196f3);
+  transition: width 1s linear;
+}
+
+.progress-marker {
+  position: absolute;
+  top: -2px;                /* dépassement 2px au-dessus */
+  height: calc(100% + 4px); /* hauteur = barre + 2px en haut + 2px en bas */
+  width: 4px;
+  background: black;
+  opacity: 0.7;
+  border-radius: 1px;
+}
+
+
+/* --- Modale --- */
+.modal {
+  display: none; /* cachée par défaut */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5); /* fond assombri */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.time-selectors {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.time-selectors select {
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  appearance: auto; /* laisse le style natif du navigateur */
+  min-width: 70px;  /* largeur pour éviter que ça soit trop serré */
+}
+
+.modal-buttons button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+#confirm-add {
+  background: #2196f3;
+  color: white;
+}
+
+#cancel-add {
+  background: #f44336;
+  color: white;
+}
+/* Champ nom timer */
+.timer-name {
+  margin-bottom: 15px;
+}
+
+#timer-name {
+  padding: 6px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 80%;
+}
+
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2000;
+}
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+  <!-- Fenêtre modale pour ajouter un timer -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3>Add a Timer</h3>
+      <div class="timer-name">
+        <label for="timer-name">Name :</label>
+        <input type="text" id="timer-name" />
+      </div>
+      <div class="time-selectors">
+        <label>
+          Min :
+          <select id="minutes-select"></select>
+        </label>
+        <label>
+          Sec :
+          <select id="seconds-select"></select>
+        </label>
+      </div>
+      <div class="modal-buttons">
+        <button id="confirm-add">Add</button>
+        <button id="cancel-add">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Global Timer</h1>
+    <div id="global-timer">00:00</div>
+    <div class="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div class="buttons">
+      <button id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
+    </div>
+
+    <h4 id="current-timer-title"></h4>
+    <div id="current-timer">--:--</div>
+
+    <button id="add-timer">Add a timer</button>
+
+    <h2>My Timers</h2>
+    <div id="timers-list"></div>
+
+    <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  </div>
+
+  <script src="script.js"></script>
+
+  <canvas id="confetti-canvas"></canvas>
+
+</body>
+
+</html>
