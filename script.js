@@ -21,6 +21,9 @@ const confirmAdd = document.getElementById("confirm-add");
 const cancelAdd = document.getElementById("cancel-add");
 
 const timerNameInput = document.getElementById("timer-name");
+const skipBtn = document.getElementById("skip");
+
+let timerStartTime = null; // timestamp du début du timer courant
 
 // Remplir les menus déroulants
 for (let i = 0; i <= 60; i++) {
@@ -156,19 +159,22 @@ function tick() {
     }
 
     if (current.remaining === 0) {
-      beep.play();
-      current.container.classList.remove("current");
-      current.container.classList.add("finished");
+  beep.play();
+  current.container.classList.remove("current");
+  current.container.classList.add("finished");
 
-      currentIndex++;
+  currentIndex++;
 
-      if (currentIndex < timers.length) {
-        timers[currentIndex].container.classList.remove("upcoming");
-        timers[currentIndex].container.classList.add("current");
-        currentTimerDisplay.textContent = format(timers[currentIndex].remaining);
-        document.getElementById("current-timer-title").textContent = timers[currentIndex].name;
-      }
-    }
+  if (currentIndex < timers.length) {
+    timers[currentIndex].container.classList.remove("upcoming");
+    timers[currentIndex].container.classList.add("current");
+    currentTimerDisplay.textContent = format(timers[currentIndex].remaining);
+    document.getElementById("current-timer-title").textContent = timers[currentIndex].name;
+
+    // ⬇️ nouveau départ
+    timerStartTime = performance.now();
+  }
+}
 
     updateGlobalTimer();
   } else {
@@ -197,7 +203,6 @@ function startTimer() {
   if (!isRunning && timers.length > 0) {
     isRunning = true;
 
-    // Appliquer les bonnes classes
     timers.forEach((t, i) => {
       t.container.classList.remove("current", "upcoming", "finished");
       if (i < currentIndex) {
@@ -211,10 +216,15 @@ function startTimer() {
 
     currentTimerDisplay.textContent = format(timers[currentIndex].remaining);
     timer = setInterval(tick, 1000);
+
+    // ⬇️ mémoriser le début du timer en cours
+    timerStartTime = performance.now();
+
     lastTimestamp = null;
     requestAnimationFrame(animateProgress);
   }
 }
+
 
 // --- Listeners pour la modale ---
 addTimerBtn.addEventListener("click", () => {
@@ -273,26 +283,37 @@ function resetTimer() {
 let lastTimestamp = null;
 
 function animateProgress(timestamp) {
-  if (!isRunning) return; // arrêter l'animation si le timer est en pause
+  if (!isRunning) return;
 
   if (!lastTimestamp) lastTimestamp = timestamp;
-  const delta = (timestamp - lastTimestamp) / 1000; // secondes écoulées depuis le dernier frame
   lastTimestamp = timestamp;
 
-  // Calcul du temps restant global
-  const totalLeft = timers.reduce((sum, t, i) => {
-    if (i < currentIndex) return sum; // déjà terminé
-    if (i === currentIndex) return sum + t.remaining - delta; // timer en cours : interpolé
-    return sum + t.remaining; // timers futurs
-  }, 0);
+  let totalLeft = 0;
+  timers.forEach((t, i) => {
+    if (i < currentIndex) return;
+
+    if (i === currentIndex) {
+      const elapsedInCurrent = (timestamp - timerStartTime) / 1000;
+
+      // ⬇️ au lieu d’utiliser t.remaining, on part de la durée originale
+      const interpolatedRemaining = Math.max(0, t.duration - elapsedInCurrent);
+
+      totalLeft += interpolatedRemaining;
+    } else {
+      totalLeft += t.remaining; // timers futurs → valeur brute
+    }
+  });
 
   const totalDuration = timers.reduce((sum, t) => sum + t.duration, 0);
   const elapsed = totalDuration - totalLeft;
   const percent = totalDuration > 0 ? (elapsed / totalDuration) * 100 : 0;
+
   progressBar.style.width = percent + "%";
 
   requestAnimationFrame(animateProgress);
 }
+
+
 
 function launchConfetti() {
   const canvas = document.getElementById("confetti-canvas");
@@ -354,3 +375,70 @@ function launchConfetti() {
   }, 13000); // confettis pendant 13000 secondes
 }
 
+skipBtn.addEventListener("click", skipTimer);
+
+function skipTimer() {
+  if (currentIndex < timers.length) {
+  const current = timers[currentIndex];
+  current.remaining = 0;
+  current.container.classList.remove("current");
+  current.container.classList.add("finished");
+
+  currentIndex++;
+
+  if (currentIndex < timers.length) {
+    timers[currentIndex].container.classList.remove("upcoming");
+    timers[currentIndex].container.classList.add("current");
+    currentTimerDisplay.textContent = format(timers[currentIndex].remaining);
+    document.getElementById("current-timer-title").textContent = timers[currentIndex].name;
+
+    // ⬇️ nouveau départ
+    timerStartTime = performance.now();
+  } else {
+    tick();
+  }
+
+  updateGlobalTimer();
+  updateMarkers();
+}
+
+}
+
+function saveTimers() {
+  const state = {
+    timers: timers.map(t => ({
+      name: t.name,
+      duration: t.duration,
+      remaining: t.remaining
+    })),
+    currentIndex,
+    isRunning
+  };
+  localStorage.setItem("timersState", JSON.stringify(state));
+}
+
+function loadTimers() {
+  const data = localStorage.getItem("timersState");
+  if (!data) return;
+
+  const state = JSON.parse(data);
+  timers = [];
+  timersList.innerHTML = "";
+
+  state.timers.forEach(t => {
+    addTimer(t.name, Math.floor(t.duration / 60), t.duration % 60);
+    timers[timers.length - 1].remaining = t.remaining;
+    timers[timers.length - 1].element.textContent = format(t.remaining);
+  });
+
+  currentIndex = state.currentIndex;
+  updateGlobalTimer();
+  updateMarkers();
+
+  if (timers.length > 0) {
+    document.getElementById("current-timer-title").textContent = timers[currentIndex]?.name || "";
+    currentTimerDisplay.textContent = format(timers[currentIndex]?.remaining || 0);
+  }
+}
+
+loadTimers();
