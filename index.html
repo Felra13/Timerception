@@ -45,17 +45,31 @@
       <button id="start">Start</button>
       <button id="pause">Pause</button>
       <button id="reset">Reset</button>
+      
     </div>
-
+  
     <h4 id="current-timer-title"></h4>
-    <div id="current-timer">--:--</div>
+
+<!-- wrapper réduit à la taille du timer, position relative pour le positionnement du skip -->
+    <div class="current-timer-wrapper">
+      <div id="current-timer">--:--</div>
+      <button id="skip" role="button" aria-label="Skip current timer">Skip</button>
+   
+      
+    </div>
+    
+
+    
+    
+    
 
     <button id="add-timer">Add a timer</button>
+    
 
     <h2>My Timers</h2>
     <div id="timers-list"></div>
 
-    <audio id="beep" src="DingEva.mp3"></audio>
+    <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
   </div>
 
@@ -66,4 +80,3 @@
 </body>
 
 </html>
-
