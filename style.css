@@ -64,19 +64,16 @@ h4 {
 }
 
 /* --- Current Timer --- */
+/* timer : garde ton style mais assure box-sizing pour gérer padding proprement */
 #current-timer {
-  font-size: 128px;           /* texte très gros */
+  font-size: 128px;
   font-weight: bold;
-  margin: 30px auto;          /* centré horizontalement avec espace vertical */
   color: #111;
-
-  /* Cadre autour du timer */
-  border: 4px solid #2196f3;  /* bleu */
-  border-radius: 20px;         /* coins arrondis */
-  padding: 20px 40px;          /* espace intérieur */
-  display: block;              /* bloque la ligne pour que le bouton soit en dessous */
-  width: fit-content;          /* largeur adaptée au texte */
-  background-color: #ffffff;   /* fond blanc */
+  border: 4px solid #2196f3;
+  border-radius: 20px;
+  padding: 20px 40px;
+  background-color: #fff;
+  text-align: center;
 }
 
 
@@ -196,7 +193,7 @@ h4 {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, #4caf50, #2196f3);
-  transition: width 1s linear;
+  
 }
 
 .progress-marker {
@@ -291,3 +288,39 @@ h4 {
   z-index: 2000;
 }
 
+.current-timer-wrapper {
+  display: block;               /* bloc classique */
+  position: relative;           /* permet de positionner Skip */
+  margin: 30px auto 10px auto;  /* centré */
+  width: fit-content;           /* largeur calée sur le chrono */
+}
+
+#current-timer {
+  font-size: 128px;
+  font-weight: bold;
+  color: #111;
+  border: 4px solid #2196f3;
+  border-radius: 20px;
+  padding: 20px 40px;
+  background-color: #fff;
+  text-align: center;
+}
+
+/* Skip collé à droite du chrono */
+#skip {
+  position: absolute;
+  top: 90%;                     /* au milieu vertical */
+  transform: translateY(-50%);  /* ajuste pile au centre */
+  right: -70px;                 /* décale ~10px à droite du chrono */
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+#skip:hover {
+  background: #666;
+}
